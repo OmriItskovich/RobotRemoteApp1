@@ -31,7 +31,7 @@ public class JoystickMoveActivity extends AppCompatActivity {
     private ImageButton flashlightImageButton;
     private PointF joystickPosition;
 
-    private boolean lightOn=true;
+    private boolean lightOn=true,dragging=false;
     private int counter=0;
     private int seekbarProgress=1;
     private final String ARDUINO_IP="192.168.4.1";
@@ -50,7 +50,6 @@ public class JoystickMoveActivity extends AppCompatActivity {
 
         setOnClickListeners();
 
-        //joystick.setOnMoveListener()
     }
 
     public void findViewsById() {
@@ -74,8 +73,6 @@ public class JoystickMoveActivity extends AppCompatActivity {
 //        });
 //        //onJoystickMove();
 //
-//
-//        Log.d("banana","X "+x+"Y "+y);
 //    }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -114,37 +111,29 @@ public class JoystickMoveActivity extends AppCompatActivity {
             handleFlashlightClick();
         });
 
-//        joystick.setOnTouchListener((view, motionEvent) -> {
-//            PointF joystickPosition=joystick.getJoystickPosition();
-//            currentX= joystickPosition.x;
-//            currentY= joystickPosition.y;
-//            Log.d("banana","X "+currentX+" Y "+currentY);
-//            return true;
+//        joystick.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                switch (motionEvent.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        dragging=true;
+//                        return true;
+//                    case MotionEvent.ACTION_UP:
+//                        joystick.resetJoystickPosition();
+//                        dragging=false;
+//                        return true;
+////                    case MotionEvent.ACTION_MOVE:
+////                        return true;
+//                }
+////                if(dragging) {
+//////                    Log.d("banana", "x: " + joystick.getX());
+//////                    return true;
+////                    joystick.updateJoystickPosition();
+////                }
+//
+//                return false;
+//            }
 //        });
-
-        joystick.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_MOVE:
-                        counter++;
-                        PointF currentLocation=joystick.getJoystickPosition();
-                        float currentX = currentLocation.x;
-                        float currentY = currentLocation.y;
-                        if(counter==50) {
-                            Log.d("banana", "X " + currentX + " Y " + currentY);
-                            counter=0;
-                        }
-                        // Handle joystick movement or updates here
-                        return true; // Consume the event
-                    case MotionEvent.ACTION_UP:
-                        // Reset or handle joystick release here if needed
-                        return true; // Consume the event
-                }
-                return false;
-            }
-        });
 
     }
 

@@ -6,14 +6,19 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 public class Joystick extends View {
 
     private static final float DEFAULT_JOYSTICK_RADIUS = 200; // Default size of joystick
     private static final float DEFAULT_BUTTON_RADIUS = 100;
+    private final String ARDUINO_IP="192.168.4.1";
 
     private float centerX;
     private float centerY;
@@ -42,6 +47,9 @@ public class Joystick extends View {
 
     public PointF getJoystickPosition() {
         return joystickPosition;
+    }
+    public void resetJoystickPosition() {
+        joystickPosition.set(centerX, centerY);
     }
 
     private void init(AttributeSet attrs) {
@@ -90,8 +98,9 @@ public class Joystick extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
+//                Log.d("banana","X: "+x+" Y "+y);
                 updateJoystickPosition(x, y);
-                invalidate(); // Redraw the view
+                invalidate();
                 return true;
             case MotionEvent.ACTION_UP:
                 // Reset joystick to center
@@ -103,20 +112,48 @@ public class Joystick extends View {
         return super.onTouchEvent(event);
     }
 
-    private void updateJoystickPosition(float x, float y) {
+    public void updateJoystickPosition(float x, float y) {
         // Limit the joystick button's position to within the joystick base
         float distance = (float) Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
         if (distance <= joystickRadius - buttonRadius) {
             joystickPosition.set(x, y);
-        } else {
+        }
+         else {
             float ratio = (joystickRadius - buttonRadius) / distance;
             float constrainedX = centerX + (x - centerX) * ratio;
             float constrainedY = centerY + (y - centerY) * ratio;
             joystickPosition.set(constrainedX, constrainedY);
         }
+         sendPositionCommand(joystickPosition.x,joystickPosition.y);
+        Log.d("banana","X: "+joystickPosition.x+" Y "+joystickPosition.y);
+
     }
 
-    private void resetJoystickPosition() {
-        joystickPosition.set(centerX, centerY);
+    public void sendPositionCommand(float positionX,float positionY) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String urlString = "http://" + ARDUINO_IP + "/?param1=" + positionX+"&param2="+positionY;
+                    Log.d("banana","Url Is: "+urlString);
+                    URL url = new URL(urlString);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setConnectTimeout(5000);
+                    connection.setReadTimeout(5000);
+
+                    int responseCode = connection.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK)
+                        Log.d("banana", "Command sent successfully");
+
+
+                    connection.disconnect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("banana", "Error sending command: " + e.getMessage());
+                }
+            }
+        }).start();
     }
+
 }
