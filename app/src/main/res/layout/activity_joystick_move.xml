@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/orange_background_drawable"
+    tools:context=".JoystickMoveActivity">
+
+    <com.example.robotremoteapplication.Joystick
+        android:id="@+id/joystick"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        />
+    <Button
+        android:id="@+id/joystickSwitchModeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        />
+    <ImageButton
+        android:id="@+id/joystickFlashLightImageButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@color/red"
+        android:src="@drawable/flash_light_on_drawable"
+        android:layout_toStartOf="@id/joystickHornImageButton"
+        android:layout_marginEnd="16dp"
+        />
+
+    <ImageButton
+        android:id="@+id/joystickHornImageButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@color/white"
+        android:layout_marginEnd="16dp"
+        android:layout_toStartOf="@id/joystickSwitchModeButton"
+        android:src="@drawable/horn_image_drawable" />
+
+    <SeekBar
+        android:id="@+id/joystickSpeedSeekBar"
+        android:layout_width="279dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="280dp"
+        android:background="@color/white"
+        android:max="10"
+        android:progress="1"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+         />
+
+    <TextView
+        android:id="@+id/joystickSpeedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="288dp"
+        android:layout_marginEnd="12dp"
+        android:text="Speed Level Is: 1"
+        android:layout_toStartOf="@id/joystickSpeedSeekBar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</RelativeLayout>
