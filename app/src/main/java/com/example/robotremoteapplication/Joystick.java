@@ -49,7 +49,9 @@ public class Joystick extends View {
         return joystickPosition;
     }
     public void resetJoystickPosition() {
-        joystickPosition.set(centerX, centerY);
+        joystickPosition.set(450, 450);
+        sendPositionCommand(joystickPosition.x,joystickPosition.y);
+        Log.d("banana","X: "+joystickPosition.x+" Y "+joystickPosition.y);
     }
 
     private void init(AttributeSet attrs) {
@@ -134,13 +136,19 @@ public class Joystick extends View {
             @Override
             public void run() {
                 try {
+
+//                    if(positionX==450.0&&positionY==450.0) maybe in order for it to work, i need to delete the stop methods and lower the speed from the arduino ide.
+//                        urlString = "http://" + ARDUINO_IP + "/?State=" +"S";
+//                    else
+//                        urlString = "http://" + ARDUINO_IP + "/?param1=" + positionX+"&param2="+positionY;
+
                     String urlString = "http://" + ARDUINO_IP + "/?param1=" + positionX+"&param2="+positionY;
                     Log.d("banana","Url Is: "+urlString);
                     URL url = new URL(urlString);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
-                    connection.setConnectTimeout(5000);
-                    connection.setReadTimeout(5000);
+                    connection.setConnectTimeout(200000);
+                    connection.setReadTimeout(200000);
 
                     int responseCode = connection.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK)
